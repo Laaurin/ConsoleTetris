@@ -1,4 +1,5 @@
 ﻿using System.Threading.Channels;
+using System.Threading.Tasks.Dataflow;
 
 namespace ConsoleTetris;
 
@@ -6,6 +7,14 @@ public class Game
 {
     public int[] _grid = new int[200];
 
+    private Shape _current, _hold, _next;
+    private int _holdPos, _holdScore;
+    public Game()
+    {
+        _current = Spawn();
+        _next = Spawn();
+        _hold = Spawn();
+    }
     
     public void Play()
     {
@@ -58,30 +67,40 @@ public class Game
     {
         var score = 0; //killed lines
         var playing = true;
-        Shape hold = Spawn(), next = Spawn(), current = Spawn();
+        int dropPos, scoreMove, toRotate;
         while (playing)
         {
-            current = next;
-            next = Spawn();
-            PrintNext(next);
-            current.X = BotMove(current);
+            _current = _next;
+            _next = Spawn();
             
-            while (Fall(current, _grid))
+            _current.X = BotMove(_current);
+            (dropPos, scoreMove, toRotate) = GetMove(_current);
+            if (score < GetMove(_hold).Item1)
+            {
+                (_current, _hold) = (_hold, _current);
+                _current.X = GetMove(_current).Item2;
+                
+            }
+            
+            
+            PrintNext();
+            PrintHold();
+            while (Fall(_current, _grid))
             { 
                 PrintGrid(_grid);
-                PrintFalling(current);
+                PrintFalling(_current);
                 Thread.Sleep(10);
             }
             score+=Tetris();
 
-            if (current.Y == 0)
+            if (_current.Y == 0)
             {
                 Console.SetCursorPosition(0, 21);
                 Console.WriteLine($"score: {score}");
                 playing = false;
             }
             
-            Thread.Sleep(200);
+            Thread.Sleep(600);
         }
     }
 
@@ -240,26 +259,54 @@ public class Game
         //Console.ForegroundColor = ConsoleColor.Black;
     }
 
-    public void PrintNext(Shape next)
+    public void PrintNext()
     {
         Console.SetCursorPosition(25, 0);
         Console.WriteLine("next Shape:");
         int cursorX = 20, cursorY = 1;
-        Console.ForegroundColor = GetColor(next.Value);
-        for (int i = 0; i < next.Len * next.Len; i++)
+        Console.ForegroundColor = GetColor(_next.Value);
+        for (int i = 0; i < _next.Len * _next.Len; i++)
         {
-            if (i % next.Len == 0 && i != 0)
+            if (i % _next.Len == 0 && i != 0)
             {
                 cursorY++;
                 cursorX = 20;
             }
             Console.SetCursorPosition(cursorX *2, cursorY);
-            if (next[i] != 0) Console.Write("██");
+            if (_next[i] != 0) Console.Write("██");
             else Console.WriteLine("  ");
             cursorX++;
         }
 
-        if (next.Len == 3)
+        if (_next.Len == 3)
+        {
+            Console.SetCursorPosition(40, cursorY+1);
+            Console.WriteLine("            ");
+        }
+
+        Console.ForegroundColor = ConsoleColor.Black;
+    }
+
+    public void PrintHold()
+    {
+        Console.SetCursorPosition(25, 10);
+        Console.WriteLine("holding Shape:");
+        int cursorX = 20, cursorY = 11;
+        Console.ForegroundColor = GetColor(_hold.Value);
+        for (int i = 0; i < _hold.Len * _hold.Len; i++)
+        {
+            if (i % _hold.Len == 0 && i != 0)
+            {
+                cursorY++;
+                cursorX = 20;
+            }
+            Console.SetCursorPosition(cursorX *2, cursorY);
+            if (_hold[i] != 0) Console.Write("██");
+            else Console.WriteLine("  ");
+            cursorX++;
+        }
+
+        if (_hold.Len == 3)
         {
             Console.SetCursorPosition(40, cursorY+1);
             Console.WriteLine("            ");
@@ -417,6 +464,50 @@ public class Game
         return dropPos;
 
         Console.WriteLine($"dropPos: {dropPos}, score: {maxScore}");
+    }
+
+    public (int, int, int) GetMove(Shape shape)
+    {
+        int dropPos = 0, score = 0, maxScore = 0, rotateAmount = 3, toRotate = 0;
+        int[] copyGrid;
+        
+        rotateAmount = shape switch
+        {
+            O => 0,
+            _ => rotateAmount
+        };
+        for (int j = 0; j <= rotateAmount; j++)
+        {
+            for (int i = -3; i < 10; i++)
+            {
+                copyGrid = _grid.Clone() as int[];
+                if (!SideFit(shape, i, 0, copyGrid)) continue;
+                shape.X = i;
+                while (Fall(shape, copyGrid))
+                {
+                
+                }
+
+                score = shape.Y * 5;
+                score += EvaluateBoard(copyGrid);
+                
+                if (score > maxScore)
+                {
+                    maxScore = score;
+                    dropPos = i;
+                    toRotate = j;
+                }
+                shape.Y = 0;
+            }
+            shape.RotateLeft();
+        }
+        shape.X = dropPos;
+
+        for (int i = 0; i < toRotate; i++)
+        {
+            shape.RotateLeft();
+        }
+        return (score, dropPos, toRotate);
     }
 
 }
