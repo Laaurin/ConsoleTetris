@@ -61,6 +61,7 @@ public class Game
 
     public void BotPlay()
     {
+        var score = 0; //killed lines
         var playing = true;
         while (playing)
         {
@@ -70,14 +71,19 @@ public class Game
             Console.Write(s.X);
             
             while (Fall(s, _grid))
-            {
-                Tetris();
+            { 
                 PrintGrid(_grid);
                 PrintFalling(s);
                 Thread.Sleep(10);
             }
+            score+=Tetris();
 
-            if (s.Y == 0) playing = false;
+            if (s.Y == 0)
+            {
+                Console.SetCursorPosition(0, 21);
+                Console.WriteLine($"score: {score}");
+                playing = false;
+            }
             Thread.Sleep(200);
         }
     }
@@ -250,8 +256,9 @@ public class Game
             _ => ConsoleColor.Black
         };
     }
-    private void Tetris()
+    public int Tetris()
     {
+        int counter = 0;
         bool tetris;
         bool empty;
         for (int i = 19; i > -1; i--)
@@ -266,7 +273,6 @@ public class Game
                     continue;
                 }
                 tetris = false;
-                break;
             }
 
             if (tetris)
@@ -277,12 +283,15 @@ public class Game
                 }
                 DropAll(i-1);
                 i = 20;
+                counter++;
             }
 
-                
+            if (empty) return counter;
+
+
         }
 
-
+        return counter;
     }
     private void DropAll(int row)
     {
