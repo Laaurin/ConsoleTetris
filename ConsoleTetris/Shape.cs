@@ -2,7 +2,7 @@
 
 public abstract class Shape
     {
-        protected int _x = 5, _y, _value, _len = 3;
+        protected int _x = 0, _y, _value, _len = 3;
         public int X
         {
             get => _x;
@@ -18,7 +18,7 @@ public abstract class Shape
         public int Value => _value;
         public int Len => _len;
 
-        protected int[] shape;
+        public int[] shape;
 
         public int this[int i] => shape[i];
 
@@ -51,9 +51,11 @@ public abstract class Shape
         public override void RotateLeft()
         {
             int[] rotated = new int[16];
+            int a, b;
             for (int i = 0; i < 16; i++)
             {
-                rotated[i] = shape[12 - 4 * i % 4 + i / 4];
+                a = shape[12 - 4 * (i % 4) + i / 4];
+                rotated[i] = a;
             }
 
             shape = rotated;
