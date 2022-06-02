@@ -58,27 +58,29 @@ public class Game
     {
         var score = 0; //killed lines
         var playing = true;
+        Shape hold = Spawn(), next = Spawn(), current = Spawn();
         while (playing)
         {
-            Shape s = Spawn();
-            s.X = BotMove(s);
-            Console.SetCursorPosition(25, 0);
-            Console.Write(s.X);
+            current = next;
+            next = Spawn();
+            PrintNext(next);
+            current.X = BotMove(current);
             
-            while (Fall(s, _grid))
+            while (Fall(current, _grid))
             { 
                 PrintGrid(_grid);
-                PrintFalling(s);
+                PrintFalling(current);
                 Thread.Sleep(10);
             }
             score+=Tetris();
 
-            if (s.Y == 0)
+            if (current.Y == 0)
             {
                 Console.SetCursorPosition(0, 21);
                 Console.WriteLine($"score: {score}");
                 playing = false;
             }
+            
             Thread.Sleep(200);
         }
     }
@@ -236,6 +238,34 @@ public class Game
         }
 
         //Console.ForegroundColor = ConsoleColor.Black;
+    }
+
+    public void PrintNext(Shape next)
+    {
+        Console.SetCursorPosition(25, 0);
+        Console.WriteLine("next Shape:");
+        int cursorX = 20, cursorY = 1;
+        Console.ForegroundColor = GetColor(next.Value);
+        for (int i = 0; i < next.Len * next.Len; i++)
+        {
+            if (i % next.Len == 0 && i != 0)
+            {
+                cursorY++;
+                cursorX = 20;
+            }
+            Console.SetCursorPosition(cursorX *2, cursorY);
+            if (next[i] != 0) Console.Write("██");
+            else Console.WriteLine("  ");
+            cursorX++;
+        }
+
+        if (next.Len == 3)
+        {
+            Console.SetCursorPosition(40, cursorY+1);
+            Console.WriteLine("            ");
+        }
+
+        Console.ForegroundColor = ConsoleColor.Black;
     }
     private ConsoleColor GetColor(int value)
     {
