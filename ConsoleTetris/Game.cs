@@ -9,11 +9,6 @@ public class Game
     
     public void Play()
     {
-        
-        // for (int i = 0; i < 200; i++)
-        // {
-        //     _grid[i] = 0;
-        // }
         var playing = true;
         char key;
 

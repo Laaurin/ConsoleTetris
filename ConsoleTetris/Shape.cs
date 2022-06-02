@@ -2,7 +2,7 @@
 
 public abstract class Shape
     {
-        protected int _x = 0, _y, _value, _len = 3;
+        protected int _x, _y, _value, _len = 3;
         public int X
         {
             get => _x;
