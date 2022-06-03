@@ -1,38 +1,38 @@
-﻿namespace ConsoleTetris;
-
-public abstract class Shape
-    {
-        protected int _x, _y, _value, _len = 3;
-        public int X
+﻿namespace ConsoleTetris
+{
+    public abstract class Shape
         {
-            get => _x;
-            set => _x = value;
-        }
-
-        public int Y
-        {
-            get => _y;
-            set => _y = value;
-        }
-
-        public int Value => _value;
-        public int Len => _len;
-
-        public int[] shape;
-
-        public int this[int i] => shape[i];
-
-        public virtual void RotateLeft()
-        {
-            int[] rotated = new int[shape.Length];
-            for (int i = 0; i < shape.Length; i++)
+            protected int _x, _y, _value, _len = 3;
+            public int X
             {
-                rotated[i] = shape[6 - 3 * (i % 3) + i / 3];
+                get => _x;
+                set => _x = value;
             }
-
-            shape = rotated;
+    
+            public int Y
+            {
+                get => _y;
+                set => _y = value;
+            }
+    
+            public int Value => _value;
+            public int Len => _len;
+    
+            public int[] shape;
+    
+            public int this[int i] => shape[i];
+    
+            public virtual void RotateLeft()
+            {
+                int[] rotated = new int[shape.Length];
+                for (int i = 0; i < shape.Length; i++)
+                {
+                    rotated[i] = shape[6 - 3 * (i % 3) + i / 3];
+                }
+    
+                shape = rotated;
+            }
         }
-    }
     public class I : Shape
     {
         public I()
@@ -152,3 +152,5 @@ public abstract class Shape
             };
         }
     }
+}
+
