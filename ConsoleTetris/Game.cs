@@ -89,7 +89,7 @@ public class Game
             { 
                 PrintGrid(_grid);
                 PrintFalling(_current);
-                Thread.Sleep(10);
+                Thread.Sleep(100);
             }
             score+=Tetris();
 
@@ -100,7 +100,7 @@ public class Game
                 playing = false;
             }
             
-            Thread.Sleep(600);
+            Thread.Sleep(200);
         }
     }
 
@@ -381,7 +381,10 @@ public class Game
 
     public int EvaluateBoard(int []copyGrid)
     {
+        int unebenheit = 0, level = 0;
         int score = 0;
+        int holes = 0;
+        bool hole;
         bool tetris;
         bool empty;
         for (int i = 19; i > -1; i--)
@@ -394,37 +397,63 @@ public class Game
                 if (copyGrid[i * 10 + j] == 0)
                 {
                     tetris = false;
-                    if (i > 0 && copyGrid[(i - 1) * 10 + j] != 0) score -= 10;
+                    hole = true;
+                    if (i > 0 && copyGrid[(i - 1) * 10 + j] != 0) //ein Block ist über einem freien Feld
+                    {
+                        holes++;
+                    }
+                    //else if (i < 19 && copyGrid[(i + 1) * 10 + j] == 0)hole = false;
+                    //else if (j > 0 && copyGrid[i * 10 + j - 1] == 0) hole = false;
+                    //else if (j < 9 && copyGrid[i * 10 + j + 1] == 0) hole = false;
+                    //else holes++;
+                    
                 }
                 else
                 {
                     empty = false;
-                    if (i < 19 && copyGrid[(i + 1) * 10 + j] == 0)
-                    {
-                        score -= 10;
-                    }
-                    if (i < 19 && copyGrid[(i + 1) * 10 + j] != 0)
-                    {
-                        score += 1;
-                    }
+                    //     if (i < 19 && copyGrid[(i + 1) * 10 + j] == 0)
+                    //     {
+                    //         score -= 10;
+                    //     }
+                    //     if (i < 19 && copyGrid[(i + 1) * 10 + j] != 0)
+                    //     {
+                    //         score += 1;
+                    //     }
                 }
             }
 
-            if (tetris) score += 100;
+            if (tetris) score += 200;
             if (empty)
             {
-                return score;
+                for (int j = 0; j < 10; j++)
+                {
+                    for (int k = i; k < 19; k++)
+                    {
+                        if (copyGrid[k * 10 + j] == 0) continue;
+                        if (j == 0) level = k;
+                        else
+                        {
+                            unebenheit += Math.Abs(level - k);
+                            level = k;
+                        }
+                        break;
+                    }
+                }
+                break;
             }
+            
         }
 
+        score -= unebenheit * 2;
+        score -= 20 * holes;
         return score;
     }
 
     public int BotMove(Shape shape)
     {
-        int dropPos = 0, score = 0, maxScore = 0, rotateAmount = 3, toRotate = 0;
+        int dropPos = 0, score, maxScore = 0, rotateAmount = 3, toRotate = 0;
         int[] copyGrid;
-        
+    
         rotateAmount = shape switch
         {
             O => 0,
@@ -434,28 +463,32 @@ public class Game
         {
             for (int i = -3; i < 10; i++)
             {
+            
                 copyGrid = _grid.Clone() as int[];
                 if (!SideFit(shape, i, 0, copyGrid)) continue;
                 shape.X = i;
                 while (Fall(shape, copyGrid))
                 {
-                
+            
                 }
-
-                score = shape.Y * 5;
+                score = shape.Y * 10;
                 score += EvaluateBoard(copyGrid);
-                
+            
                 if (score > maxScore)
                 {
                     maxScore = score;
                     dropPos = i;
                     toRotate = j;
+                    
                 }
+                // PrintGrid(copyGrid);
+                // Console.WriteLine(score);
+                // Console.ReadKey();
                 shape.Y = 0;
             }
             shape.RotateLeft();
         }
-        shape.X = dropPos;
+        //shape.X = dropPos;
 
         for (int i = 0; i < toRotate; i++)
         {
@@ -470,7 +503,7 @@ public class Game
     {
         int dropPos = 0, score = 0, maxScore = 0, rotateAmount = 3, toRotate = 0;
         int[] copyGrid;
-        
+    
         rotateAmount = shape switch
         {
             O => 0,
@@ -485,12 +518,12 @@ public class Game
                 shape.X = i;
                 while (Fall(shape, copyGrid))
                 {
-                
+            
                 }
 
-                score = shape.Y * 5;
+                score = shape.Y * 10;
                 score += EvaluateBoard(copyGrid);
-                
+            
                 if (score > maxScore)
                 {
                     maxScore = score;
