@@ -8,19 +8,19 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\lauri\\.nuget\\packages\\": {}
+    "/Users/laurinmuller/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\code\\C#\\ConsoleTetris\\ConsoleTetris\\ConsoleTetris.csproj",
+      "projectUniqueName": "/Users/laurinmuller/RiderProjects/ConsoleTetris/ConsoleTetris/ConsoleTetris.csproj",
       "projectName": "ConsoleTetris",
-      "projectPath": "D:\\code\\C#\\ConsoleTetris\\ConsoleTetris\\ConsoleTetris.csproj",
-      "packagesPath": "C:\\Users\\lauri\\.nuget\\packages\\",
-      "outputPath": "D:\\code\\C#\\ConsoleTetris\\ConsoleTetris\\obj\\",
+      "projectPath": "/Users/laurinmuller/RiderProjects/ConsoleTetris/ConsoleTetris/ConsoleTetris.csproj",
+      "packagesPath": "/Users/laurinmuller/.nuget/packages/",
+      "outputPath": "/Users/laurinmuller/RiderProjects/ConsoleTetris/ConsoleTetris/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\lauri\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/laurinmuller/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
@@ -58,7 +58,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.300/RuntimeIdentifierGraph.json"
       }
     }
   }

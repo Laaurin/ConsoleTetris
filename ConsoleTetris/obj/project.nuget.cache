@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xWNqg4Y8R2ybhPFw51CCYp2JY6MMji558zuUW8lrT+hQ8t4X2+0+4lVjXP7g1XUWj4Dsd1mqHwRnPchX1FDSqw==",
+  "dgSpecHash": "m3zC01u44sYfpLFx/Ka/APZu4/OWbFw54siFmEFH2WsMeneRYQNIAiCWfM0jTbhtolwu0PQmARpddMK6qsv1xg==",
   "success": true,
-  "projectFilePath": "D:\\code\\C#\\ConsoleTetris\\ConsoleTetris\\ConsoleTetris.csproj",
+  "projectFilePath": "/Users/laurinmuller/RiderProjects/ConsoleTetris/ConsoleTetris/ConsoleTetris.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

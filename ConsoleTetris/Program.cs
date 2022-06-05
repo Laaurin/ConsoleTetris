@@ -1,15 +1,14 @@
 ﻿using System;
 
-namespace ConsoleTetris
+namespace ConsoleTetris;
+class Programm
 {
-    class Programm
+    public static void Main(String[] args)
     {
-        public static void Main(String[] args)
-        {
-            Game game = new Game();
-            
-            game.Play();
-        }
+        Game game = new Game();
+        
+        game.BotPlay();
     }
 }
+
 
